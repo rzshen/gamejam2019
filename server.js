@@ -48,9 +48,13 @@ app.use(express.urlencoded());
 
 
 app.get('/', function(req,res){
-  res.sendFile(__dirname + "/public/index.html");
+  res.sendFile(__dirname + "/public/phaserexample.html");
 }); 
 // Routing
+
+app.get('/phaser', function(req,res){
+  res.sendFile(__dirname + "/public/phaserexample.html");
+});
 
 // Specify backend route
 app.get('/api', (request, response) => {
