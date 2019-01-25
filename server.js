@@ -7,38 +7,16 @@ const router = express.Router();
 
 
 
-// Connect to mongoDB database
-// mongoose.connect('mongodb://localhost/test', { useNewUrlParser: true });
-// // Get Mongoose to use the global promise library
-// mongoose.Promise = global.Promise;
-// //Get the default connection
-// var db = mongoose.connection;
-// var db = mongoose.connection;
-// db.on('error', console.error.bind(console, 'connection error:'));
-// db.once('open', function() {
-//   // we're connected!
-// });
+// Connect to mongoDB database using mongoose
 
+mongoose.connect('mongodb+srv://GameJam2018:BullShit@gamejam2019-mvzaj.mongodb.net/test?retryWrites=true', {useNewUrlParser: true});
+
+const Cat = mongoose.model('Cat', { name: String });
+
+const kitty = new Cat({ name: 'Zildjian' });
+kitty.save().then(() => console.log('meow'));
 //Define a schema
-var Schema = mongoose.Schema;
 
-var SomeModelSchema = new Schema({
-  a_string: String,
-  a_date: Date
-});
-
-// Compile model from schema
-var SomeModel = mongoose.model('SomeModel', SomeModelSchema );
-
-
-// Create an instance of model SomeModel
-var awesome_instance = new SomeModel({ name: 'awesome' });
-
-// Save the new model instance, passing a callback
-awesome_instance.save(function (err) {
-  if (err) return handleError(err);
-  // saved!
-});
 // Server frontend view
 //  Serve static files
 app.use(express.static('public'));
