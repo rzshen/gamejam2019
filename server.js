@@ -11,8 +11,10 @@ const router = express.Router();
 
 mongoose.connect('mongodb+srv://GameJam2018:BullShit@gamejam2019-mvzaj.mongodb.net/test?retryWrites=true', {useNewUrlParser: true});
 
-const Product = mongoose.model('Product', {name: String, product: String });
-
+var Product = mongoose.model('Product', {name: String, product: String });
+// var aProduct = new Product({name: "currentNew"});
+// 	// aProduct.save().then(() => Product.find({name: 'current1'}, function(err, docs) {res.send({product: docs[0].product})}));
+// 	aProduct.save();
 //Define a schema
 
 // Server frontend view
@@ -39,21 +41,18 @@ app.get('/product', function(req,res){
 });
 
 app.post('/product', function(req,res){
-	Product.find({name: 'currentNew'}, function(err, docs) {res.send({product: docs[0].product})});
-	next()
+	Product.find({name: 'currentNew'}, function(err, docs) {res.send({product: docs[0].product*req.body.num1})});
+	// next()
 	// res.send({product: productFromDB})
 
 }); 
 
 
 app.post('/', function(req,res){
-	data = req.body.data
-	var productFromDB
-	// const Product = mongoose.model('Product', {name: String, product: String });
-
-	const aProduct = new Product({name: "currentNew", product: data.num1 * data.num2});
-	// aProduct.save().then(() => Product.find({name: 'current1'}, function(err, docs) {res.send({product: docs[0].product})}));
-	aProduct.save(function(err, prod){
+	data = req.body.data;
+	aProduct= data.num1 * data.num2;
+	console.log(aProduct);
+	Product.update({name:'currentNew'}, {product: aProduct},{upsert:true}, function(err, prod){
 		if(err) return console.error(err);
 		Product.find({name: 'currentNew'}, function(err, docs) {res.send({product: docs[0].product})});
 	})
