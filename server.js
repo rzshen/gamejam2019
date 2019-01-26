@@ -12,9 +12,9 @@ const router = express.Router();
 mongoose.connect('mongodb+srv://GameJam2018:BullShit@gamejam2019-mvzaj.mongodb.net/test?retryWrites=true', {useNewUrlParser: true});
 
 var Product = mongoose.model('Product', {name: String, product: String });
-var aProduct = new Product({name: "currentNew"});
-	// aProduct.save().then(() => Product.find({name: 'current1'}, function(err, docs) {res.send({product: docs[0].product})}));
-	aProduct.save();
+// var aProduct = new Product({name: "currentNew"});
+// 	// aProduct.save().then(() => Product.find({name: 'current1'}, function(err, docs) {res.send({product: docs[0].product})}));
+// 	aProduct.save();
 //Define a schema
 
 // Server frontend view
@@ -52,7 +52,7 @@ app.post('/', function(req,res){
 	data = req.body.data;
 	aProduct= data.num1 * data.num2;
 	console.log(aProduct);
-	Product.update({name:'currentNew'}, {product: aProduct},function(err, prod){
+	Product.update({name:'currentNew'}, {product: aProduct},{upsert:true}, function(err, prod){
 		if(err) return console.error(err);
 		Product.find({name: 'currentNew'}, function(err, docs) {res.send({product: docs[0].product})});
 	})
