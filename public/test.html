@@ -1,0 +1,27 @@
+<!doctype html>
+<html ng-app="angularApp">
+ <head>
+  <script   src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.4/angular.min.js"></script>
+<script src="test.js"></script>
+ </head>
+ <body>
+  <div ng-controller="indexCtrl">
+   <input
+    type="text"
+    ng-model="num1"
+    placeholder="Type a number"
+   />
+   <br/>
+   <input
+    type="text"
+    ng-model="num2"
+    placeholder="Type another number"
+   />
+   <br/><br/>
+   <button ng-click = "multiply()" type="button">Multiply</button>
+   <button ng-click = "grabProduct()" type="button">Muliply last product by first number</button>
+   <h2 ng-if="product != ''"> The answer is {{product}} </h2>
+   <h2 ng-if="product == ''"> The answer is ... </h2>
+  </div>
+ </body>
+</html>
