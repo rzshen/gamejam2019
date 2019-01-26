@@ -19,8 +19,9 @@
    />
    <br/><br/>
    <button ng-click = "multiply()" type="button">Multiply</button>
+   <button ng-click = "grabProduct()" type="button">Grab Last Product</button>
    <h2 ng-if="product != ''"> The answer is {{product}} </h2>
-
+   <h2 ng-if="product == ''"> The answer is ... </h2>
   </div>
  </body>
 </html>

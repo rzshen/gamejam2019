@@ -2,7 +2,7 @@
 angular.module('angularApp', [])
   .controller('indexCtrl', function($scope, $http) {
 
-   $scope.product = 123;
+   $scope.product = '';
    $scope.num1 = 2;
    $scope.num2 = 3;
    // $scope.formData = {
@@ -31,10 +31,26 @@ angular.module('angularApp', [])
 		            console.log(failedResponse);
 		    });
 
+	}
 
-	   // $http.post('/', { 'num1' : 2 ,'num2' : 3 },
-    //     function (response) { $scope.product = response; },
-    //     function (failure) { console.log("failed :(", failure); });
+	$scope.grabProduct = function(){
+
+		console.log("triggered grabProduct")
+	    $http({
+	        url: '/product',
+	        method: "POST",
+	    	headers : { 'Content-Type': 'application/json' },
+	    	data:{
+				}
+	    })
+	    .then(function successCallback(successResponse) {
+	            // success
+		        $scope.product = successResponse.data.product
+	    	}, 
+		    function errorCallback(failedResponse) { // optional
+		            console.log(failedResponse);
+		    });
+		
 	}
    
 

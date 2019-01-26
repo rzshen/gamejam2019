@@ -11,10 +11,8 @@ const router = express.Router();
 
 mongoose.connect('mongodb+srv://GameJam2018:BullShit@gamejam2019-mvzaj.mongodb.net/test?retryWrites=true', {useNewUrlParser: true});
 
-const Cat = mongoose.model('Cat', { name: String });
+const Product = mongoose.model('Product', {name: String, product: String });
 
-const kitty = new Cat({ name: 'Zildjian' });
-kitty.save().then(() => console.log('meow'));
 //Define a schema
 
 // Server frontend view
@@ -36,12 +34,31 @@ app.get('/api', (request, response) => {
 });
 
 
+app.get('/product', function(req,res){
+  res.sendFile(__dirname + "/public/index.html");
+});
+
+app.post('/product', function(req,res){
+	Product.find({name: 'currentNew'}, function(err, docs) {res.send({product: docs[0].product})});
+	next()
+	// res.send({product: productFromDB})
+
+}); 
 
 
 app.post('/', function(req,res){
-	console.log(req.body.data)
-	res.send({product: req.body.data.num1 * req.body.data.num2});
-	// res.product = req.num1 * req.num2
+	data = req.body.data
+	var productFromDB
+	// const Product = mongoose.model('Product', {name: String, product: String });
+
+	const aProduct = new Product({name: "currentNew", product: data.num1 * data.num2});
+	// aProduct.save().then(() => Product.find({name: 'current1'}, function(err, docs) {res.send({product: docs[0].product})}));
+	aProduct.save(function(err, prod){
+		if(err) return console.error(err);
+		Product.find({name: 'currentNew'}, function(err, docs) {res.send({product: docs[0].product})});
+	})
+	// var productFromDB = Product.find({name: 'current'}, function(err, docs) {console.log(docs[0].product)});
+	// res.send({product: data.num1 * data.num2});
 }); 
 
 //Set app to use express backend router
