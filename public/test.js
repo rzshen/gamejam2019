@@ -13,7 +13,7 @@ angular.module('angularApp', [])
    	$scope.multiply = function () {
    		console.log("triggered multiply")
 	    $http({
-	        url: '/',
+	        url: '/product',
 	        method: "POST",
 	    	headers : { 'Content-Type': 'application/json' },
 	    	data:{
@@ -37,7 +37,7 @@ angular.module('angularApp', [])
 
 		console.log("triggered grabProduct")
 	    $http({
-	        url: '/product',
+	        url: '/times2',
 	        method: "POST",
 	    	headers : { 'Content-Type': 'application/json' },
 	    	data:{
