@@ -41,6 +41,7 @@ angular.module('angularApp', [])
 	        method: "POST",
 	    	headers : { 'Content-Type': 'application/json' },
 	    	data:{
+	    			"num1":$scope.num1
 				}
 	    })
 	    .then(function successCallback(successResponse) {
