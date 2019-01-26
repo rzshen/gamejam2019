@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html ng-app="angularApp">
+  <head>
+    <meta charset="UTF-8">
+    <title>title</title>
+    <link rel="stylesheet" href="css/stylesheet.css">
+
+  </head>
+
+  <body ng-controller="indexCtrl"> 
+  	<div class="gamecanvas">
+  	</div>
+
+  	<div class="leftelements">
+  		<div class="elements">
+  			<img class="icons" id="bhat" src="./img/hat.png">
+        <!-- <button ng-click = "grabProduct()" type="button">Multiply</button> -->
+       <!--  <p class="participants" ng-model="numberPlayer"> {{numberPlayer}} </p> -->
+       <p class="participants"> # of Players</p>
+
+  		</div>
+
+
+		<div class="elements">
+			<img class="icons" id="bull" src="./img/bull.png">
+      <p class="lowestmove"> Lowest Count</p>
+		</div>  
+
+		<div class="elements">
+			<img class="icons" id="bar" src="./img/movekeeper.png">
+      <p class="numberofmoves"> Current Count</p>
+  	</div>
+
+  	<div class="rightelements">
+  		<div class="elements">
+  		<img class="icons" id="sun" src="./img/time.png">
+      <p class="timeleft"></p>
+      <div class="timer">
+    
+  		</div>
+    </div>
+
+  		<div class="elements">
+  		<img class="icons" id="flag" src="./img/flag.png">
+       <p class="leaderboard"> Leader Board</p>
+  		</div>
+
+  	</div>
+  
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.4/angular.min.js"></script>
+  <script type="text/javascript" src="./js/index.js"></script>
+
+  
+  </body>
+</html>
