@@ -1,0 +1,284 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8" />
+    <title>Making a grid in Phaser</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+    var config = {
+        type: Phaser.AUTO,
+        width: 800,
+        height: 600,
+        physics: {
+            default: 'arcade',
+            arcade: {
+                gravity: { y: 0},
+                debug: false
+            }
+        },
+        scene: {
+            preload: preload,
+            create: create,
+            update: update,
+            extend: {
+                    player: null,
+                    reticle: null,
+                    moveKeys: null,
+                    bullets: null,
+                    time: 0,
+                }
+        }
+    };
+
+    var game = new Phaser.Game(config);
+    var gridWidth = 500;
+    var gridHeight = 500;
+    var numberOfColumns = 16;
+    var numberOfRows = 16;
+    var gridPosX = 50;   // this number is center of 1st cell
+    var gridPosY = 50;   // center of 1st cell
+    var spriteSpeed = 500;
+    var playerRed;
+    var playerBlue;
+    var playerGreen;
+    var player;
+    var players;
+    var platforms;
+    var cursors;
+    var select;
+    var walls;
+    var scoreText;
+    var isMoving = false;
+
+    function preload ()
+    {
+        this.load.setBaseURL('assets/');
+
+        this.load.image('sky', 'sky.png');
+        this.load.image('star', 'star.png' );
+        this.load.image('square', 'square.png');
+        this.load.image('wall', 'platform.png');
+        this.load.spritesheet('dude', 
+            'dude.png',
+            { frameWidth: 32, frameHeight: 48 }
+        );
+    }
+
+    function create ()
+    {
+        this.add.image(400, 300, 'sky');  // image(x, y, <key>), x y is where to load 
+                                          //image is 800x600. phaser loads from center.
+        //this.add.image(400, 300, 'star'); // if sky comes after star, sky will cover star.
+
+        /*var grid = this.add.group ({
+            key: 'square',
+            frameQuantity: numberOfColumns*numberOfRows
+        });
+
+        grid.scaleX = 0.5;
+
+        Phaser.Actions.GridAlign(grid.getChildren(), {
+            width: numberOfColumns,
+            height: numberOfRows,
+            cellWidth: Math.ceil(         ),
+            cellHeight: Math.ceil(gridHeight/numberOfRows),
+            //position: TOP_RIGHT,
+            x: gridPosX,
+            y: gridPosY
+        });
+
+        var stars = this.add.image(100, 100, 'star');
+        stars.scaleX = 0.5;*/
+
+        // Draw Map
+
+        var level = [
+        [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+        [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+        [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],                               
+        [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+        [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+        [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+        [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+        [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+        [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+        [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+        [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+        [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+        [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+        [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+        [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+        [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+    ]; 
+        var grid = this.make.tilemap({ tileWidth: gridWidth/numberOfColumns, tileHeight: gridWidth/numberOfColumns, data: level });
+        var tiles = grid.addTilesetImage('square', null, gridWidth/numberOfColumns, gridWidth/numberOfColumns, 1, 2);
+        var layer2 = grid.createStaticLayer(0, tiles, 50, 50);
+        this.add.sprite(50,50,'star');
+/*
+        for (var i = 0 ; i < numberOfRows ; i++)
+        {
+            for (var j = 0 ; j < numberOfColumns ; j++)
+            {
+                var xp = Math.ceil(gridWidth/numberOfRows)*i + gridPosX; 
+                var yp = Math.ceil(gridHeight/numberOfColumns)*j + gridPosY;
+                var cellScaleX = gridHeight/numberOfRows/100;
+                var cellScaleY = gridWidth/numberOfColumns/100;
+                var cell = this.add.image(xp, yp, 'square');
+                cell.scaleX = cellScaleX;
+                cell.scaleY = cellScaleY;
+            }
+        }*/
+
+       /* players = this.physics.add.group();
+        players.create(100,100,'dude');
+        players.create(100,200, 'dude');*/
+
+        //player = this.add.sprite(100,100,'dude');
+
+
+
+        player = this.physics.add.sprite(100, 100, 'dude').setCollideWorldBounds(true).setBounce(0);
+        playerRed = this.physics.add.sprite(200,100,'dude').setCollideWorldBounds(true).setBounce(0).setTint(0x990000);
+        playerBlue = this.physics.add.sprite(300,100, 'dude').setCollideWorldBounds(true).setBounce(0).setTint(0x009900);
+        playerGreen = this.physics.add.sprite(400,100, 'dude').setCollideWorldBounds(true).setBounce(0).setTint(0x000099);
+
+        //this.add.image(50, 50, 'star');
+        //cursors = this.input.keyboard.createCursorKeys();
+
+        // spawn some walls
+        var wallx = gridWidth/numberOfColumns*1 + 50;
+        var wally = gridWidth/numberOfColumns*10 + 50;
+        walls = this.physics.add.staticGroup();
+        walls.create(wallx,wally,'wall').setScale(gridHeight/numberOfRows/400).setOrigin(32/400, 32/400).refreshBody();
+        walls.create(wallx+50,1,'wall').setScale(gridHeight/numberOfRows/400).setOrigin(32/400, 32/400).refreshBody();
+
+        this.physics.add.collider(player, walls, hitWall, null, this);
+
+        // debug text
+
+        scoreText = this.add.text(16, 16, 'hi', { fontSize: '32px', fill: '#000' });
+
+        moveKeys = this.input.keyboard.addKeys({
+            'up': Phaser.Input.Keyboard.KeyCodes.W,
+            'down': Phaser.Input.Keyboard.KeyCodes.S,
+            'left': Phaser.Input.Keyboard.KeyCodes.A,
+            'right': Phaser.Input.Keyboard.KeyCodes.D
+            //'selectPlayer': Phaser.Input.Keyboard.KeyCodes.Z,
+            //'sel'
+        });
+
+
+        this.input.keyboard.on('keydown_W', function (event) {
+            if (isMoving == false)
+            {
+                isMoving = true;
+                player.setVelocityY(-800);
+                player.setVelocityX(0);
+            }
+        });
+        this.input.keyboard.on('keydown_S', function (event) {
+            if (isMoving == false)
+            {
+                isMoving = true;  
+                player.setVelocityY(800);
+                player.setVelocityX(0);
+            }
+        });
+        this.input.keyboard.on('keydown_A', function (event) {
+            if (isMoving == false)
+            {
+                isMoving = true;
+                player.setVelocityX(-800);
+                player.setVelocityY(0);
+            }
+        });
+        this.input.keyboard.on('keydown_D', function (event) {
+            if (isMoving == false)
+            {
+                isMoving = true;
+                player.setVelocityX(800);
+                player.setVelocityY(0);
+            }
+        });
+
+        // Stops player acceleration on uppress of WASD keys
+     /*   this.input.keyboard.on('keyup_W', function (event) {
+            if (moveKeys['down'].isUp)
+                player.setAccelerationY(0);
+        });
+        this.input.keyboard.on('keyup_S', function (event) {
+            if (moveKeys['up'].isUp)
+                player.setAccelerationY(0);
+        });
+        this.input.keyboard.on('keyup_A', function (event) {
+            if (moveKeys['right'].isUp)
+                player.setAccelerationX(0);
+        });
+        this.input.keyboard.on('keyup_D', function (event) {
+            if (moveKeys['left'].isUp)
+                player.setAccelerationX(0);
+        });*/
+
+
+    }
+
+    function hitWall ()
+    {
+        //player.setVelocity(0,0);
+        scoreText.setText('wall hit');
+        isMoving = false;
+        //this.keyboard.enabled = true;
+        //player.input.ignoreEvents = true;
+    }
+
+    function update ()
+    {   
+        if (isMoving == false)
+            scoreText.setText('not moving');
+        else
+            scoreText.setText('moving');
+
+        if( player.body.onWall() == true || player.body.onFloor() == true || player.body.onCeiling() == true)
+        {
+            isMoving = false;
+        }
+        
+      /*  if (cursors.left.isDown)
+        {
+            player.setVelocityX(-spriteSpeed);
+        }
+        else if (cursors.right.isDown)
+        {
+            player.setVelocityX(spriteSpeed);
+        }
+        else
+        {
+            player.setVelocityX(0);
+        }
+
+        if (cursors.up.isDown )
+        {
+            player.setVelocityY(-spriteSpeed);
+        }
+        else if (cursors.down.isDown)
+        {
+            player.setVelocityY(spriteSpeed);
+        }
+        else {
+            player.setVelocityY(0);
+        }*/
+    }
+
+</script>
+
+</body>
+</html>
