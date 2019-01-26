@@ -56,10 +56,15 @@ app.get('/phaser', function(req,res){
   res.sendFile(__dirname + "/public/phaserexample.html");
 });
 
+app.get('/grid', function(req,res){
+  res.sendFile(__dirname + "/public/grid.html");
+});
+
 // Specify backend route
 app.get('/api', (request, response) => {
     response.status(200).send({message: 'Hello World!'})
 });
+
 
 
 
