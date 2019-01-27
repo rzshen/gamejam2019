@@ -16,10 +16,10 @@ body {font-family: Arial, Helvetica, sans-serif;}
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
+  padding-top: 3.125rem;  /*Location of the box 50px*/
   left: 0;
   top: 0;
-  width: 100%; /* Full width */
+  width: 100%; /* Full width 
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0,0,0); /* Fallback color */
@@ -28,11 +28,13 @@ body {font-family: Arial, Helvetica, sans-serif;}
 
 /* Modal Content */
 .modal-content {
-  background-color: #fefefe;
+  background-color: #ffffff00 !important;
+  padding: 0.625rem !important;
   margin: auto;
-  padding: 20px;
-  border: 1px solid #888;
+  border: 1px solid #ffffff00;
   width: 80%;
+  height: 100%;
+
 }
 
 /* The Close Button */
@@ -116,11 +118,12 @@ body {font-family: Arial, Helvetica, sans-serif;}
 
                 <!-- The Modal -->
                 <div id="myModal" class="modal">
+                  <h1 class="list">Leader Board</h1>
 
                   <!-- Modal content -->
                   <div class="modal-content">
                     <span class="close">&times;</span>
-                    <p>Some text in the Modal..</p>
+                    <img class="board" src="./img/leader.png">
                   </div>
 
                 </div>
