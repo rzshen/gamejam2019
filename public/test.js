@@ -1,7 +1,7 @@
 // index.js
 angular.module('angularApp', [])
   .controller('testCtrl', function($scope, $http) {
-
+  var socket = io();
    $scope.product = '';
    $scope.num1 = 2;
    $scope.num2 = 3;
@@ -9,8 +9,23 @@ angular.module('angularApp', [])
    // 		num1: $scope.num1,
    // 		num2 : $scope.num2	
    // }
-   	console.log($scope)
-   	$scope.multiply = function () {
+
+
+  	angular.element(document).ready(function(){
+
+  		socket.on('product', function(msg){
+      		$scope.product = msg;
+
+  		});
+  		socket.on('opponentSolve', function(msg){
+  			$scope.lowestCount = msg.lowestCount;
+  			console.log("lowest count stored:" + msg.lowestCount)
+
+  		});
+  		$scope.$apply();
+  	});   	
+
+  	$scope.multiply = function () {
    		console.log("triggered multiply")
 	    $http({
 	        url: '/product',
@@ -77,5 +92,7 @@ angular.module('angularApp', [])
 		
 	}
 
+	$scope.productForAll = function(){
+		socket.emit('product', $scope.product)}
 
   })

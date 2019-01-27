@@ -5,15 +5,12 @@ const mongoose = require('mongoose');
 const app = express();
 const router = express.Router();
 const Schema = mongoose.Schema;
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 // const routing = require('./server/routing.js');
 // const schema = require('./server/schema.js');
 
-
-//long polling
-const EventEmitter = require('events').EventEmitter
-var messageBus = new EventEmitter()
-messageBus.setMaxListeners(100)
 
 
 // Connect to mongoDB database using mongoose
@@ -34,9 +31,17 @@ app.use(express.urlencoded());
 
 
 app.get('/', function(req,res){
-  // res.sendFile(__dirname + "/public/index.html");
+
 }); 
 // Routing
+
+app.get('/phaser', function(req,res){
+  res.sendFile(__dirname + "/public/phaserexample.html");
+});
+
+app.get('/grid', function(req,res){
+  res.sendFile(__dirname + "/public/grid.html");
+});
 
 // Specify backend route
 app.get('/api', (request, response) => {
@@ -58,7 +63,8 @@ app.post('/product', function(req,res){
 	Product.update({name:'currentNew'}, {product: aProduct},{upsert:true}, function(err, prod){
 		if(err) return console.error(err);
 		Product.find({name: 'currentNew'}, function(err, docs) {res.send({product: docs[0].product})});
-	})
+	});
+	io.emit('product', aProduct );
 	// var productFromDB = Product.find({name: 'current'}, function(err, docs) {console.log(docs[0].product)});
 	// res.send({product: data.num1 * data.num2});
 }); 
@@ -77,12 +83,20 @@ app.post('/solve', function(req, res){
 		, function(err, solution){
 		if(err) return console.error(err);
 		console.log(solution);
+		//looking for lowst moveCount from db
+		var query = Solve.find({boardID: aSolve.boardID}).sort({moveCount:1}).limit(1);
+		query.exec(function(err, currentLowestMoveCount){
+			io.emit('opponentSolve', {moveCount: aSolve.moves.length, user: aSolve.user, timestamp: aSolve.timestamp, boardID: aSolve.boardID, lowestCount: currentLowestMoveCount[0].moveCount})
+		});
+		
 	})
+// TODO
 });
 
 
 app.get('/times2', function(req,res){
 	Product.find({name: 'currentNew'}, function(err, docs) {res.send({product: docs[0].product})});
+
 
 }); 
 app.post('/times2', function(req,res){
@@ -91,13 +105,28 @@ app.post('/times2', function(req,res){
 }); 
 
 
-app.get('/getLowestCount', function(req, res){
-	var query = Solve.find({boardID: 1}).sort({moveCount:1}).limit(1)
-	query.exec(function(err, docs){res.send({lowestCount: docs[0].moveCount})})
-});
+// app.get('/getLowestCount', function(req, res){
+// 	var query = Solve.find({boardID: 1}).sort({moveCount:1}).limit(1)
+// 	query.exec(function(err, docs){res.send({lowestCount: docs[0].moveCount})})
+// });
 
 // ==============================================================================================
 
+
+// ======================================Socket==========================
+
+io.on('connection', function(socket)
+{
+  console.log('a user connected');
+  // On recieving a product test command
+  socket.on('product', function(msg){
+  	console.log('product:' + msg);
+  	io.emit('product', msg)
+  });
+  socket.on('disconnect', function(){
+  	console.log('user disconnected')
+  });
+});
 
 
 
@@ -109,7 +138,7 @@ app.use(router);
 // Configure port
 const port = 8080;
 // Listen to port
-app.listen(port);
+http.listen(port);
 console.log(`Server is running on port: ${port}`);
 
 

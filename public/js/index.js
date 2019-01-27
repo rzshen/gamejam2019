@@ -2,78 +2,41 @@
 angular.module('angularApp', [])
   .controller('indexCtrl', function($scope, $http) {
 
-   $scope.product = '';
-   $scope.num1 = 2;
-   $scope.num2 = 3;
-   // $scope.formData = {
-   // 		num1: $scope.num1,
-   // 		num2 : $scope.num2	
-   // }
-   
-   	$scope.multiply = function () {
-   		console.log("triggered multiply")
-	    $http({
-	        url: '/',
-	        method: "POST",
-	    	headers : { 'Content-Type': 'application/json' },
-	    	data:{
-					"data": {
-						"num1": $scope.num1,
-						"num2": $scope.num2
-					}
-				}
-	    })
-	    .then(function successCallback(successResponse) {
-	            // success
-		        $scope.product = successResponse.data.product
-	    	}, 
-		    function errorCallback(failedResponse) { // optional
-		            console.log(failedResponse);
-		    });
-
-	}
-
-	$scope.grabProduct = function(){
-
-		console.log("triggered grabProduct")
-	    $http({
-	        url: '/product',
-	        method: "POST",
-	    	headers : { 'Content-Type': 'application/json' },
-	    	data:{
-			}
-	    })
-	    .then(function successCallback(successResponse) {
-	            // success
-		        $scope.numberPlayer = successResponse.data.product
-	    	}, 
-		    function errorCallback(failedResponse) { // optional
-		            console.log(failedResponse);
-		    });
-		
-	}
+  	var socket = io();
    
    	$scope.lowestCount = '';
-   	$scope.getLowestCount = function(){
-   		
-   		$http({
-	        url: '/getLowestCount',
-	        method: "GET",
-	    	headers : { 'Content-Type': 'application/json' },
-	    
-	    })
-	    .then(function successCallback(successResponse) {
-	            // success
-	            console.log(successResponse.data.lowestCount)
-		        // $scope.product = successResponse.data.product
-		        // $scope.publish(successResponse.data.product);
-		        $scope.lowestCount = successResponse.data.lowestCount;
-	    	}, 
-		    function errorCallback(failedResponse) { // optional
-		            console.log(failedResponse);
-		    });
+   	$scope.currCount = '';
 
-   	}
+   	angular.element(document).ready(function(){
+
+  		socket.on('opponentSolve', function(msg){
+  			$scope.lowestCount = msg.lowestCount;
+  			$scope.leadingUser = msg.user.name;
+  			console.log("lowest count stored:" + msg.lowestCount)
+			$scope.$apply();
+  		});
+  		
+  	});   	
+   	// $scope.getLowestCount = function(){
+   		
+   	// 	$http({
+	   //      url: '/getLowestCount',
+	   //      method: "GET",
+	   //  	headers : { 'Content-Type': 'application/json' },
+	    
+	   //  })
+	   //  .then(function successCallback(successResponse) {
+	   //          // success
+	   //          console.log(successResponse.data.lowestCount)
+		  //       // $scope.product = successResponse.data.product
+		  //       // $scope.publish(successResponse.data.product);
+		  //       $scope.lowestCount = successResponse.data.lowestCount;
+	   //  	}, 
+		  //   function errorCallback(failedResponse) { // optional
+		  //           console.log(failedResponse);
+		  //   });
+
+   	// }
 
   })
 

@@ -3,6 +3,8 @@
  <head>
   <script   src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.4/angular.min.js"></script>
 <script src="test.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+
  </head>
  <body>
   <div ng-controller="testCtrl">
@@ -21,6 +23,7 @@
    <button ng-click = "multiply()" type="button">Multiply</button>
    <button ng-click = "multiplyNum1ByTwo()" type="button">Multiply last product by first number</button>
    <button ng-click = "get()" type="button">GET</button>
+   <button ng-click = "productForAll()" type="button">Product For Everyone</button>
    <h2 ng-if="product != ''"> The answer is {{product}} </h2>
    <h2 ng-if="product == ''"> The answer is ... </h2>
   </div>
