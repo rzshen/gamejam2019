@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html ng-app="angularApp">
+  <head>
+    <meta charset="UTF-8">
+    <title>BullShot</title>
+    <link rel="stylesheet" href="css/stylesheet.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="icon" href="./img/bull.png">
+
+   <style>
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width 
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #ffffff00 !important;
+  margin: auto;
+  border: 1px solid #ffffff00;
+  max-width: 100%;
+  margin-left: 200px;
+
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.leaderbg{
+  max-width: 100%;
+  background-image: url(./img/leader.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 1200px;
+  height: 800px;
+  margin-left: 110px;
+
+}
+
+.list{
+  color: white;
+  margin-left: 550px;
+  margin-top: 20px;
+}
+</style>
+
+
+   
+  </head>
+
+  <body ng-controller="indexCtrl"> 
+  	
+    
+    <div class="container-fluid">
+    <div class="row">
+
+      <div class="col-sm-3">
+              <div class="icon" id="logo"></div>
+              <div class="icon element" id="bhat"></div>
+              <div class="icon element" id="bull"></div> 
+              <div class="icon element" id="bar"></div>
+      </div>
+      
+
+      <div class="col-sm-6">
+          <div class="gamecanvas"></div>
+      </div>
+
+
+      <div class="col-sm-3">
+          	 <div class="icon element" id="sun"> 
+              <div class="timer"> <span id="time">05:00</span></div>
+            </div>
+        		 <div class="icon element" id="flag">
+             <button id="myBtn">View Board</button>
+
+                <!-- The Modal -->
+                <div id="myModal" class="modal">
+                  <h1 class="list">Leader Board</h1>
+
+                  <!-- Modal content -->
+                  <div class="leaderbg">
+                  <div class="modal-content">
+                    <span class="close">&times;</span>
+                  </div>
+                  </div>
+
+                </div>
+  
+             </div>
+      </div>
+
+          
+
+        </div>
+      </div>
+
+
+
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="./js/script.js"></script>
+
+
+
+  
+  </body>
+</html>
