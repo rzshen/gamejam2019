@@ -5,15 +5,12 @@ const mongoose = require('mongoose');
 const app = express();
 const router = express.Router();
 const Schema = mongoose.Schema;
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 // const routing = require('./server/routing.js');
 // const schema = require('./server/schema.js');
 
-
-//long polling
-const EventEmitter = require('events').EventEmitter
-var messageBus = new EventEmitter()
-messageBus.setMaxListeners(100)
 
 
 // Connect to mongoDB database using mongoose
@@ -58,7 +55,8 @@ app.post('/product', function(req,res){
 	Product.update({name:'currentNew'}, {product: aProduct},{upsert:true}, function(err, prod){
 		if(err) return console.error(err);
 		Product.find({name: 'currentNew'}, function(err, docs) {res.send({product: docs[0].product})});
-	})
+	});
+	io.emit('product', aProduct );
 	// var productFromDB = Product.find({name: 'current'}, function(err, docs) {console.log(docs[0].product)});
 	// res.send({product: data.num1 * data.num2});
 }); 
@@ -100,6 +98,21 @@ app.get('/getLowestCount', function(req, res){
 // ==============================================================================================
 
 
+// ======================================Socket==========================
+
+io.on('connection', function(socket)
+{
+  console.log('a user connected');
+  // On recieving a product test command
+  socket.on('product', function(msg){
+  	console.log('product:' + msg);
+  	io.emit('product', msg)
+  });
+  socket.on('disconnect', function(){
+  	console.log('user disconnected')
+  });
+});
+
 
 
 //Set app to use express backend router
@@ -110,7 +123,7 @@ app.use(router);
 // Configure port
 const port = 8080;
 // Listen to port
-app.listen(port);
+http.listen(port);
 console.log(`Server is running on port: ${port}`);
 
 

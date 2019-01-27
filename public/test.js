@@ -9,8 +9,17 @@ angular.module('angularApp', [])
    // 		num1: $scope.num1,
    // 		num2 : $scope.num2	
    // }
-   	console.log($scope)
-   	$scope.multiply = function () {
+
+
+  	angular.element(document).ready(function(){
+
+  		socket.on('product', function(msg){
+      		$scope.product = msg;
+      		$scope.$apply();
+  		});
+  	});   	
+
+  	$scope.multiply = function () {
    		console.log("triggered multiply")
 	    $http({
 	        url: '/product',
@@ -77,5 +86,7 @@ angular.module('angularApp', [])
 		
 	}
 
+	$scope.productForAll = function(){
+		socket.emit('product', $scope.product)}
 
   })
