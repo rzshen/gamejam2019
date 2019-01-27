@@ -26,7 +26,7 @@ app.use(express.urlencoded());
 
 
 app.get('/', function(req,res){
-  res.sendFile(__dirname + "/public/index.html");
+  // res.sendFile(__dirname + "/public/index.html");
 }); 
 // Routing
 
@@ -36,19 +36,11 @@ app.get('/api', (request, response) => {
 });
 
 
-app.get('/product', function(req,res){
-  res.sendFile(__dirname + "/public/index.html");
+app.get('/test', function(req,res){
+  res.sendFile(__dirname + "/public/test.html");
 });
 
 app.post('/product', function(req,res){
-	Product.find({name: 'currentNew'}, function(err, docs) {res.send({product: docs[0].product*req.body.num1})});
-	// next()
-	// res.send({product: productFromDB})
-
-}); 
-
-
-app.post('/', function(req,res){
 	data = req.body.data;
 	aProduct= data.num1 * data.num2;
 	console.log(aProduct);
@@ -59,6 +51,16 @@ app.post('/', function(req,res){
 	// var productFromDB = Product.find({name: 'current'}, function(err, docs) {console.log(docs[0].product)});
 	// res.send({product: data.num1 * data.num2});
 }); 
+
+app.post('/times2', function(req,res){
+	Product.find({name: 'currentNew'}, function(err, docs) {res.send({product: docs[0].product*req.body.num1})});
+	// next()
+	// res.send({product: productFromDB})
+
+}); 
+
+
+
 
 //Set app to use express backend router
 app.use(router);
