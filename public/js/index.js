@@ -53,6 +53,26 @@ angular.module('angularApp', [])
 		
 	}
    
+   	$scope.lowestCount = '';
+   	$scope.getLowestCount = function(){
+   		
+   		$http({
+	        url: '/getLowestCount',
+	        method: "GET",
+	    	headers : { 'Content-Type': 'application/json' },
+	    
+	    })
+	    .then(function successCallback(successResponse) {
+	            // success
+	         //    console.log(successResponse.data.product)
+		        // $scope.product = successResponse.data.product
+		        // $scope.publish(successResponse.data.product);
+	    	}, 
+		    function errorCallback(failedResponse) { // optional
+		            console.log(failedResponse);
+		    });
+
+   	}
 
   })
 
