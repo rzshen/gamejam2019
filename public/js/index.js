@@ -64,9 +64,10 @@ angular.module('angularApp', [])
 	    })
 	    .then(function successCallback(successResponse) {
 	            // success
-	         //    console.log(successResponse.data.product)
+	            console.log(successResponse.data.lowestCount)
 		        // $scope.product = successResponse.data.product
 		        // $scope.publish(successResponse.data.product);
+		        $scope.lowestCount = successResponse.data.lowestCount;
 	    	}, 
 		    function errorCallback(failedResponse) { // optional
 		            console.log(failedResponse);

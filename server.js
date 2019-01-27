@@ -64,14 +64,12 @@ app.post('/product', function(req,res){
 
 // storing an instance of solve
 app.post('/solve', function(req, res){
-	// console.log(req.body.solve.boardID);
 	aSolve = req.body.solve;
 	res.status(200).send();
 
-	console.log(aSolve.length)
-	Solve.updateOne({ "boardID": aSolve.boardID, "user.name": aSolve.user.name }
+	Solve.updateOne({ "boardID": aSolve.boardID, "user.name": aSolve.user.name, "timestamp": aSolve.timestamp }
 		, { $set: 
-			{moves: aSolve.moves, user: aSolve.user, timestamp: aSolve.timestamp, boardID: aSolve.boardID}
+			{moves: aSolve.moves, moveCount: aSolve.moves.length, user: aSolve.user, timestamp: aSolve.timestamp, boardID: aSolve.boardID}
 		}
 		,{upsert:true}
 		, function(err, solution){
@@ -92,7 +90,8 @@ app.post('/times2', function(req,res){
 
 
 app.get('/getLowestCount', function(req, res){
-	Solve.find({boardID: 1}, function(err, docs) {res.send})
+	var query = Solve.find({boardID: 1}).sort({moveCount:1}).limit(1)
+	query.exec(function(err, docs){res.send({lowestCount: docs[0].moveCount})})
 });
 
 // ==============================================================================================
@@ -149,7 +148,11 @@ var moveSchema = new Schema({
 	}
 });
 
-var userSchema = new Schema({name: String, active: Boolean});
+var userSchema = new Schema({
+	name: String, 
+	active: Boolean,
+	score: Number
+});
 
 var solveSchema = new Schema ({
 	moves:[moveSchema],
