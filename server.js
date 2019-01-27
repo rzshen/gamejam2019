@@ -75,7 +75,14 @@ app.post('/solve', function(req, res){
 		, function(err, solution){
 		if(err) return console.error(err);
 		console.log(solution);
+		//looking for lowst moveCount from db
+		var query = Solve.find({boardID: aSolve.boardID}).sort({moveCount:1}).limit(1);
+		query.exec(function(err, currentLowestMoveCount){
+			io.emit('opponentSolve', {moveCount: aSolve.moves.length, user: aSolve.user, timestamp: aSolve.timestamp, boardID: aSolve.boardID, lowestCount: currentLowestMoveCount[0].moveCount})
+		});
+		
 	})
+// TODO
 });
 
 
@@ -89,10 +96,10 @@ app.post('/times2', function(req,res){
 }); 
 
 
-app.get('/getLowestCount', function(req, res){
-	var query = Solve.find({boardID: 1}).sort({moveCount:1}).limit(1)
-	query.exec(function(err, docs){res.send({lowestCount: docs[0].moveCount})})
-});
+// app.get('/getLowestCount', function(req, res){
+// 	var query = Solve.find({boardID: 1}).sort({moveCount:1}).limit(1)
+// 	query.exec(function(err, docs){res.send({lowestCount: docs[0].moveCount})})
+// });
 
 // ==============================================================================================
 

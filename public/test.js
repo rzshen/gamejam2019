@@ -1,7 +1,7 @@
 // index.js
 angular.module('angularApp', [])
   .controller('testCtrl', function($scope, $http) {
-
+  var socket = io();
    $scope.product = '';
    $scope.num1 = 2;
    $scope.num2 = 3;
@@ -15,8 +15,14 @@ angular.module('angularApp', [])
 
   		socket.on('product', function(msg){
       		$scope.product = msg;
-      		$scope.$apply();
+
   		});
+  		socket.on('opponentSolve', function(msg){
+  			$scope.lowestCount = msg.lowestCount;
+  			console.log("lowest count stored:" + msg.lowestCount)
+
+  		});
+  		$scope.$apply();
   	});   	
 
   	$scope.multiply = function () {
