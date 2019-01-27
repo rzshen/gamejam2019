@@ -4,22 +4,30 @@ const mongoose = require('mongoose');
 const app = express();
 const Schema = mongoose.Schema;
 
-app.get('/', function(req,res){
+const router = express.Router();
+
+router.get('/', function(req,res){
+
   // res.sendFile(__dirname + "/public/index.html");
 }); 
 // Routing
 
 // Specify backend route
-app.get('/api', (request, response) => {
+
+router.get('/api', (request, response) => {
+
     response.status(200).send({message: 'Hello World!'})
 });
 
 
-app.get('/test', function(req,res){
+
+router.get('/test', function(req,res){
   res.sendFile(__dirname + "/public/test.html");
 });
 
-app.post('/product', function(req,res){
+router.post('/product', function(req,res){
+	console.log(req.body)
+
 	data = req.body.data;
 	aProduct= data.num1 * data.num2;
 	console.log(aProduct);
@@ -31,7 +39,26 @@ app.post('/product', function(req,res){
 	// res.send({product: data.num1 * data.num2});
 }); 
 
-app.post('/times2', function(req,res){
+
+router.post('/solve', function(req, res){
+	// console.log(req.body.solve.boardID);
+	aSolve = req.body.solve;
+	res.status(200).send();
+
+	console.log(aSolve.moves.length)
+	Solve.updateOne({ "boardID": aSolve.boardID, "user.name": aSolve.user.name }
+		, { $set: 
+			{moves: aSolve.moves, user: aSolve.user, timestamp: aSolve.timestamp, boardID: aSolve.boardID}
+		}
+		,{upsert:true}
+		, function(err, solution){
+		if(err) return console.error(err);
+		console.log(solution);
+	})
+});
+
+router.post('/times2', function(req,res){
+
 	Product.find({name: 'currentNew'}, function(err, docs) {res.send({product: docs[0].product*req.body.num1})});
 	// next()
 	// res.send({product: productFromDB})

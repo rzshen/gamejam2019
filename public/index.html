@@ -76,7 +76,9 @@ body {font-family: Arial, Helvetica, sans-serif;}
 
         		<div class="elements">
         			<img class="icons" id="bull" src="./img/bull.png">
-              <p class="lowestmove"> Lowest Count</p>
+              <p class="lowestmove" ng-init="getLowestCount()"> Lowest Count
+                <span><br>{{lowestCount}}</span>
+              </p>
         		</div>  
 
         		<div class="elements">

@@ -1,6 +1,6 @@
 // index.js
 angular.module('angularApp', [])
-  .controller('indexCtrl', function($scope, $http) {
+  .controller('testCtrl', function($scope, $http) {
 
    $scope.product = '';
    $scope.num1 = 2;
@@ -25,6 +25,7 @@ angular.module('angularApp', [])
 	    })
 	    .then(function successCallback(successResponse) {
 	            // success
+	            // console.log(successResponse.data.product)
 		        $scope.product = successResponse.data.product
 	    	}, 
 		    function errorCallback(failedResponse) { // optional
@@ -33,7 +34,7 @@ angular.module('angularApp', [])
 
 	}
 
-	$scope.grabProduct = function(){
+	$scope.multiplyNum1ByTwo = function(){
 
 		console.log("triggered grabProduct")
 	    $http({
@@ -53,6 +54,28 @@ angular.module('angularApp', [])
 		    });
 		
 	}
-   
+
+
+	$scope.get = function(){
+
+		console.log("triggered grabProduct")
+	    $http({
+	        url: '/times2',
+	        method: "GET",
+	    	headers : { 'Content-Type': 'application/json' },
+	    
+	    })
+	    .then(function successCallback(successResponse) {
+	            // success
+	            console.log(successResponse.data.product)
+		        $scope.product = successResponse.data.product
+		        $scope.publish(successResponse.data.product);
+	    	}, 
+		    function errorCallback(failedResponse) { // optional
+		            console.log(failedResponse);
+		    });
+		
+	}
+
 
   })
