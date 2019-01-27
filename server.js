@@ -5,8 +5,10 @@ const mongoose = require('mongoose');
 const app = express();
 const router = express.Router();
 const Schema = mongoose.Schema;
+
 // const routing = require('./server/routing.js');
 // const schema = require('./server/schema.js');
+
 
 //long polling
 const EventEmitter = require('events').EventEmitter
@@ -25,6 +27,7 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded());
 // app.use(express.static(__dirname + "/public/index.html"));
+
 
 
 // ================================================= ROUTING =============================================
