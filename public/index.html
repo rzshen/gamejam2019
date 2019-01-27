@@ -8,15 +8,11 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <link rel="icon" href="./img/bull.png">
 
-    <style>
-body {font-family: Arial, Helvetica, sans-serif;}
-
-/* The Modal (background) */
+   <style>
 .modal {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
-  padding-top: 3.125rem;  /*Location of the box 50px*/
   left: 0;
   top: 0;
   width: 100%; /* Full width 
@@ -29,11 +25,10 @@ body {font-family: Arial, Helvetica, sans-serif;}
 /* Modal Content */
 .modal-content {
   background-color: #ffffff00 !important;
-  padding: 0.625rem !important;
   margin: auto;
   border: 1px solid #ffffff00;
-  width: 80%;
-  height: 100%;
+  max-width: 100%;
+  margin-left: 200px;
 
 }
 
@@ -51,104 +46,103 @@ body {font-family: Arial, Helvetica, sans-serif;}
   text-decoration: none;
   cursor: pointer;
 }
+
+.leaderbg{
+  max-width: 100%;
+  background-image: url(./img/leader.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 1200px;
+  height: 800px;
+  margin-left: 110px;
+
+}
+
+.list{
+  color: white;
+  margin-left: 550px;
+  margin-top: 20px;
+}
 </style>
 
+
+   
   </head>
 
   <body ng-controller="indexCtrl"> 
   	
     
-    <div class="container">
+    <div class="container-fluid">
     <div class="row">
 
-      <div class="col-sm">
-      	<div class="leftelements">
-            <div class="elements">
-              <img id="logo" src="./img/logo.png">
-            </div>
+      <div class="col-sm-3">
+              <div class="icon" id="logo"></div>
+              <div class="icon element" id="bhat"></div>
+              <div class="icon element" id="bull">
+                <p class="lowestmove">Lowest Count
+                <span 
+                 ng-show="lowestCount != ''"><br>{{lowestCount}} by {{leadingUser}}
+               </span>
+             </p>
+                
+              </div> 
+              <div class="icon element" id="bar"></div>
+      </div>
+      
 
-        		<div class="elements">
-        			<img class="icons" id="bhat" src="./img/hat.png">
-              <!-- <button ng-click = "grabProduct()" type="button">Multiply</button> -->
-             <!--  <p class="participants" ng-model="numberPlayer"> {{numberPlayer}} </p> -->
-             <p class="participants"> # of Players</p>
-            </div>
-
-        		<div class="elements">
-        			<img class="icons" id="bull" src="./img/bull.png">
-              <p class="lowestmove"> Lowest Count</p>
-        		</div>  
-
-        		<div class="elements">
-        			<img class="icons" id="bar" src="./img/movekeeper.png">
-              <p class="numberofmoves"> Current Count</p>
-          	</div>
-
-          </div>
+      <div class="col-sm-6">
+          <div class="gamecanvas" id="gamecanvas"></div>
       </div>
 
-      <div class="col-sm">
-          <div class="gamecanvas">
-          </div>
-     </div>
 
-      <div class="col-sm">
-      	
-        <div class="rightelements">
-          		
-              <div class="elements">
-          		<img class="icons" id="sun" src="./img/time.png">
-              <p class="timeleft"></p>
-              </div>
-
-            <div class="timer">
-              <div> <span id="time">05:00</span>
-              </div>
+      <div class="col-sm-3">
+          	 <div class="icon element" id="sun"> 
+              <div class="timer"> <span id="time">05:00</span></div>
             </div>
-
-        		<div class="elements">
-        		<img class="icons" id="flag" src="./img/flag.png">
-             <p class="leaderboard"> Leader <br> Board</p>
-            </div>
-
-            <!-- <h2>Modal Example</h2> -->
-
-                <!-- Trigger/Open The Modal -->
-                <button id="myBtn">View Board</button>
+        		 <div class="icon element" id="flag">
+             <button id="myBtn">View Board</button>
 
                 <!-- The Modal -->
                 <div id="myModal" class="modal">
                   <h1 class="list">Leader Board</h1>
 
                   <!-- Modal content -->
+                  <div class="leaderbg">
                   <div class="modal-content">
                     <span class="close">&times;</span>
-                    <img class="board" src="./img/leader.png">
+                  </div>
                   </div>
 
                 </div>
+  
+             </div>
+      </div>
 
-           
-            
+          
 
         </div>
       </div>
 
-    </div>
-  </div>
 
+<!-- 
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="./js/script.js"></script> -->
 
-    
-  
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.4/angular.min.js"></script>
-  <script>src="https://code.jquery.com/jquery-3.2.1.js"
+   <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.4/angular.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.js"
      integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
      crossorigin="anonymous"></script>
-     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 
-  <script type="text/javascript" src="./js/index.js"></script>
+    <script type="text/javascript" src="./js/index.js"></script>
+    <script type="text/javascript" src="./js/grid.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
 
   
   </body>

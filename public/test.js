@@ -1,7 +1,7 @@
 // index.js
 angular.module('angularApp', [])
-  .controller('indexCtrl', function($scope, $http) {
-
+  .controller('testCtrl', function($scope, $http) {
+  var socket = io();
    $scope.product = '';
    $scope.num1 = 2;
    $scope.num2 = 3;
@@ -9,8 +9,23 @@ angular.module('angularApp', [])
    // 		num1: $scope.num1,
    // 		num2 : $scope.num2	
    // }
-   	console.log($scope)
-   	$scope.multiply = function () {
+
+
+  	angular.element(document).ready(function(){
+
+  		socket.on('product', function(msg){
+      		$scope.product = msg;
+
+  		});
+  		socket.on('opponentSolve', function(msg){
+  			$scope.lowestCount = msg.lowestCount;
+  			console.log("lowest count stored:" + msg.lowestCount)
+
+  		});
+  		$scope.$apply();
+  	});   	
+
+  	$scope.multiply = function () {
    		console.log("triggered multiply")
 	    $http({
 	        url: '/product',
@@ -25,6 +40,7 @@ angular.module('angularApp', [])
 	    })
 	    .then(function successCallback(successResponse) {
 	            // success
+	            // console.log(successResponse.data.product)
 		        $scope.product = successResponse.data.product
 	    	}, 
 		    function errorCallback(failedResponse) { // optional
@@ -33,7 +49,7 @@ angular.module('angularApp', [])
 
 	}
 
-	$scope.grabProduct = function(){
+	$scope.multiplyNum1ByTwo = function(){
 
 		console.log("triggered grabProduct")
 	    $http({
@@ -53,6 +69,30 @@ angular.module('angularApp', [])
 		    });
 		
 	}
-   
+
+
+	$scope.get = function(){
+
+		console.log("triggered grabProduct")
+	    $http({
+	        url: '/times2',
+	        method: "GET",
+	    	headers : { 'Content-Type': 'application/json' },
+	    
+	    })
+	    .then(function successCallback(successResponse) {
+	            // success
+	            console.log(successResponse.data.product)
+		        $scope.product = successResponse.data.product
+		        $scope.publish(successResponse.data.product);
+	    	}, 
+		    function errorCallback(failedResponse) { // optional
+		            console.log(failedResponse);
+		    });
+		
+	}
+
+	$scope.productForAll = function(){
+		socket.emit('product', $scope.product)}
 
   })
