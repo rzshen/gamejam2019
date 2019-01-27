@@ -31,9 +31,17 @@ app.use(express.urlencoded());
 
 
 app.get('/', function(req,res){
-  // res.sendFile(__dirname + "/public/index.html");
+
 }); 
 // Routing
+
+app.get('/phaser', function(req,res){
+  res.sendFile(__dirname + "/public/phaserexample.html");
+});
+
+app.get('/grid', function(req,res){
+  res.sendFile(__dirname + "/public/grid.html");
+});
 
 // Specify backend route
 app.get('/api', (request, response) => {
@@ -88,6 +96,7 @@ app.post('/solve', function(req, res){
 
 app.get('/times2', function(req,res){
 	Product.find({name: 'currentNew'}, function(err, docs) {res.send({product: docs[0].product})});
+
 
 }); 
 app.post('/times2', function(req,res){
