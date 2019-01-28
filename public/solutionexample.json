@@ -1,0 +1,46 @@
+{
+  "solve": 
+  {
+    "boardID": "1",
+    "moves": 
+    [
+      {
+        "color": "green",
+        "direction": "down"
+      },
+      {
+        "color": "green",
+        "direction": "left"
+      },
+      {
+        "color": "green",
+        "direction": "up"
+      },
+      {
+        "color": "red",
+        "direction": "left"
+      },
+      {
+        "color": "red",
+        "direction": "down"
+      },
+      {
+        "color": "red",
+        "direction": "left"
+      },
+      {
+        "color": "red",
+        "direction": "up"
+      },
+      {
+        "color": "red",
+        "direction": "right"
+      }
+    ],
+    "timestamp": "1548632983754",
+    "user:": {
+      "active": "true",
+      "name": "hazel"
+    }
+  }
+}

@@ -30,7 +30,7 @@
     var red = 0xcb0626;
     var green = 0x4a911b;
     var blue = 0x0299f1;
-    var yellow = 0xc70ade;
+    var yellow = 0xc70ade; // is now purple
     var bullRed;
     var bullBlue;
     var bullGreen;
@@ -40,6 +40,10 @@
     var goalPoints = [];
     var level;
     var moveList = [];
+    var particles;
+    var emitter;
+    var numberOfMoves = 0;
+    var resetButton;
 
     function preload ()
     {
@@ -47,7 +51,7 @@
 
         this.load.image('star', 'star.png' );
         this.load.image('tiles', 'tiles.png');
-
+        this.load.image('reset', 'reset.png');
         this.load.image('bull', 'bullWhite.png');
         this.load.image('dust', 'dust.png');
         this.load.image('red', 'red.png');
@@ -55,11 +59,6 @@
 
     function create ()
     {
-        //this.add.image(400, 300, 'sky');  // image(x, y, <key>), x y is where to load 
-                                          //image is 800x600. phaser loads from center.
-        //this.add.image(400, 300, 'star'); // if sky comes after star, sky will cover star.
-
-
         // Draw Map
 
         level = [
@@ -92,6 +91,17 @@
             }
         }
 
+        console.log(goalPoints);
+
+        particles = this.add.particles('dust');
+
+        emitter = particles.createEmitter({
+            lifespan: 500,
+            speed: { min: 50, max: 75 },
+            scale: { start: 0.3, end: 0 },
+            //blendMode: 'ADD'
+        });
+
         // spawn goal
         //spawnRandomGoal();
         goalColor = getRandomColor();
@@ -101,40 +111,41 @@
         goal = this.add.sprite(goalX*cellSize + cellSize/2, goalY*cellSize + cellSize/2,'star').setTint(goalColor);
 
         // dust particles
-        var particles = this.add.particles('red');
-
-        var emitter = particles.createEmitter({
-            x: 200,
-            y: 300,
-            lifespan: 2000,
-            speed: { min: 400, max: 600 },
-            angle: 330,
-            gravityY: 300,
-            scale: { start: 0.4, end: 0 },
-            quantity: 2,
-            blendMode: 'ADD'
-        });
+       
 
 
         // spawn bulls
         var bullX = 4;
         var bullY = 13;
-        bullRed = this.physics.add.sprite(cellSize/2 + cellSize*bullX + gridPosX, cellSize/2 + cellSize*bullY + gridPosY, 'bull').setTint(red);
+        bullRed = this.physics.add.sprite(cellSize/2 + cellSize*bullX + gridPosX, cellSize/2 + cellSize*bullY + gridPosY, 'bull').setTint(red).setInteractive();
         bullX = 10;
         bullY = 6;
-        bullBlue = this.physics.add.sprite(cellSize/2 + cellSize*bullX + gridPosX, cellSize/2 + cellSize*bullY + gridPosY, 'bull').setTint(blue);
+        bullBlue = this.physics.add.sprite(cellSize/2 + cellSize*bullX + gridPosX, cellSize/2 + cellSize*bullY + gridPosY, 'bull').setTint(blue).setInteractive();
         bullX = 1;
         bullY = 9;
-        bullGreen = this.physics.add.sprite(cellSize/2 + cellSize*bullX + gridPosX, cellSize/2 + cellSize*bullY + gridPosY, 'bull').setTint(green);
+        bullGreen = this.physics.add.sprite(cellSize/2 + cellSize*bullX + gridPosX, cellSize/2 + cellSize*bullY + gridPosY, 'bull').setTint(green).setInteractive();
         bullX = 14;
         bullY = 10;
-        bullYellow = this.physics.add.sprite(cellSize/2 + cellSize*bullX + gridPosX, cellSize/2 + cellSize*bullY + gridPosY, 'bull').setTint(yellow);
-        player = bullRed;
-        //this.add.image(50, 50, 'star');
-        //cursors = this.input.keyboard.createCursorKeys();
+        bullYellow = this.physics.add.sprite(cellSize/2 + cellSize*bullX + gridPosX, cellSize/2 + cellSize*bullY + gridPosY, 'bull').setTint(yellow).setInteractive();
+        selectBullRed();
+        
+        bullRed.on('pointerdown', function() {
+            selectBullRed();
+        });
+        bullGreen.on('pointerdown', function() {
+            selectBullGreen();
+        });
+        bullBlue.on('pointerdown', function() {
+            selectBullBlue();
+        });
+        bullYellow.on('pointerdown', function() {
+            selectBullYellow();
+        });
 
-        //emitter.startFollow(bullRed);
-
+        resetButton = this.add.image(656/2,656/2,'reset').setInteractive();
+        resetButton.on('pointerdown', function() {
+            resetBoard();
+        });
 
         // debug text
 
@@ -144,14 +155,14 @@
 
 
 
-      /*  this.tweens.add({
+      /*this.tweens.add({
                     targets: player,
                     y: {
                         value: 100, 
                         duration: 1000
                     }
-                });
-*/
+                });*/
+
 
         this.input.keyboard.on('keydown_W', function (event) {
             if (isMoving == false)
@@ -174,19 +185,23 @@
                     else
                         break; //exit while
                 }
-                player.y = newY;
+                if (player.y != newY)
+                {
+                    incrementNumberOfMoves();
+                    moveList.push({ color: getPlayerColorString(), direction: 'up'});
+                    player.y = newY;
+                }
 
                 //tween(player.x, newY);
 
-                moveList.push({ color: getPlayerColorString(), direction: 'up'});
             }
         });
         this.input.keyboard.on('keydown_S', function (event) {
             if (isMoving == false)
             {
-                /*isMoving = true;  
-                player.setVelocityY(800);
-                player.setVelocityX(0);*/
+                //isMoving = true;  
+                //player.setVelocityY(800);
+                //player.setVelocityX(0);
 
                 var tile = layer.getTileAtWorldXY(player.x, player.y, true);
                 var newY = player.y;
@@ -202,16 +217,20 @@
                     else
                         break; //exit while
                 }
-                player.y = newY;
-                moveList.push({ color: getPlayerColorString(), direction: 'down'});
+                if (player.y != newY)
+                {
+                    incrementNumberOfMoves();
+                    moveList.push({ color: getPlayerColorString(), direction: 'down'});
+                    player.y = newY;
+                }
             }
         });
         this.input.keyboard.on('keydown_A', function (event) {
             if (isMoving == false)
             {
-                /*isMoving = true;
-                player.setVelocityX(-800);
-                player.setVelocityY(0);*/
+                //isMoving = true;
+                //player.setVelocityX(-800);
+                //player.setVelocityY(0);
 
                 var tile = layer.getTileAtWorldXY(player.x, player.y, true);
                 var newX = player.x;
@@ -227,16 +246,20 @@
                     else
                         break; //exit while
                 }
-                player.x = newX;
-                moveList.push({ color: getPlayerColorString(), direction: 'left'});
+                if (player.x != newX)
+                {
+                    incrementNumberOfMoves();
+                    moveList.push({ color: getPlayerColorString(), direction: 'left'});
+                    player.x = newX;
+                }
             }
         });
         this.input.keyboard.on('keydown_D', function (event) {
             if (isMoving == false)
             {
-                /*isMoving = true;
-                player.setVelocityX(800);
-                player.setVelocityY(0);*/
+                //isMoving = true;
+                //player.setVelocityX(800);
+                //player.setVelocityY(0);
 
                 var tile = layer.getTileAtWorldXY(player.x, player.y, true);
                 var newX = player.x;
@@ -252,32 +275,30 @@
                     else
                         break; //exit while
                 }
-                player.x = newX;
-                moveList.push({ color: getPlayerColorString(), direction: 'right'});
+                if (player.x != newX)
+                {
+                    incrementNumberOfMoves();
+                    moveList.push({ color: getPlayerColorString(), direction: 'right'});
+                    player.x = newX;
+                }
             }
         });
 
         this.input.keyboard.on('keydown_Z', function (event) {
-            player = bullRed;
+            selectBullRed();
         });
         this.input.keyboard.on('keydown_X', function (event) {
-            player = bullBlue;
+            selectBullBlue();
         });
         this.input.keyboard.on('keydown_C', function (event) {
-            player = bullGreen;
+            selectBullGreen();
         });
         this.input.keyboard.on('keydown_V', function (event) {
-            player = bullYellow;
+            selectBullYellow();
         });
 
 
-        /*this.tweens.add({
-                    targets: player,
-                    y: {
-                        value: 100, 
-                        duration: 1000
-                    }
-                });*/
+        
 
     }
 
@@ -329,6 +350,8 @@
         // send this somewhere
 
         moveList = [];
+        numberOfMoves = 0;
+        document.getElementById("bar").innerHTML = numberOfMoves;
 
         console.log(JSON.parse(jsonString));
         spawnRandomGoal ();
@@ -379,7 +402,7 @@
         goal.y = goalPoints[randomGoalPosition][0] * cellSize + cellSize/2;
         goal.setTint(goalColor);
         score += 1;
-        scoreText.setText('Score: ' + score);
+        //scoreText.setText('Score: ' + score);
     }
 
     function getPlayerColor ()
@@ -406,20 +429,44 @@
             return "yellow";
     }
 
-   /* function tween ( x, y)
+    function selectBullRed()
     {
-        this.tweens.add({
-            targets: player,
-            x: {
-                value: x,
-                duration: 1000
-            },
-            y: {
-                value: y, 
-                duration: 1000
-            }
-        });
-    }*/
+        player = bullRed;
+        emitter.startFollow(bullRed);
+    }
+
+    function selectBullGreen()
+    {
+        player = bullGreen;
+        emitter.startFollow(bullGreen);
+    }
+
+    function selectBullBlue()
+    {
+        player = bullBlue;
+        emitter.startFollow(bullBlue);
+    }
+
+    function selectBullYellow()
+    {
+        player = bullYellow;
+        emitter.startFollow(bullYellow);
+    }
+
+    function incrementNumberOfMoves()
+    {
+        numberOfMoves++;
+        scoreText.setText('Moves: ' + numberOfMoves);
+        // send this to counter box
+        document.getElementById("bar").innerHTML = numberOfMoves;
+    }
+
+    function resetBoard()
+    {
+        numberOfMoves = 0;
+        document.getElementById("bar").innerHTML = numberOfMoves;
+        moveList = [];
+    }
 
     function update ()
     {   
